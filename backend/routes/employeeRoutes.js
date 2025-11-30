@@ -38,19 +38,37 @@ routes.get('/employees', auth, async (req, res) => {
  */
 routes.post('/employees', auth, upload.single("profile_picture"), async (req, res) => {
     try {
-        const data = req.body;
+        const { first_name, last_name, email } = req.body;
 
+        // Auto-fill fields required by your model
+        const autoFilledFields = {
+            position: "New Hire",
+            salary: 50000,
+            department: "General",
+            date_of_joining: new Date()
+        };
+
+        let employeeData = {
+            first_name,
+            last_name,
+            email,
+            ...autoFilledFields
+        };
+
+        // Add profile picture if uploaded
         if (req.file) {
-            data.profile_picture = `/uploads/${req.file.filename}`;
+            employeeData.profile_picture = `/uploads/${req.file.filename}`;
         }
 
-        const employee = await Employee.create(data);
-        res.status(201).json({
+        const employee = await Employee.create(employeeData);
+
+        return res.status(201).json({
             message: "Employee created successfully.",
             employee
         });
+
     } catch (err) {
-        res.status(500).json({ status: false, message: err.message });
+        return res.status(500).json({ status: false, message: err.message });
     }
 });
 
@@ -73,28 +91,40 @@ routes.get('/employees/:eid', auth, async (req, res) => {
 
 /**
  * PUT /api/v1/emp/employees/:eid
- * Update an employee by ID
+ * Update an employee (only allow editing 3 fields)
  */
 routes.put('/employees/:eid', auth, upload.single("profile_picture"), async (req, res) => {
     try {
-        const data = req.body;
+        const { first_name, last_name, email } = req.body;
 
+        let updateData = {
+            first_name,
+            last_name,
+            email
+        };
+
+        // If a picture is uploaded, update path
         if (req.file) {
-            data.profile_picture = `/uploads/${req.file.filename}`;
+            updateData.profile_picture = `/uploads/${req.file.filename}`;
         }
 
-        const employee = await Employee.findByIdAndUpdate(req.params.eid, data, { new: true });
+        const employee = await Employee.findByIdAndUpdate(
+            req.params.eid,
+            updateData,
+            { new: true }
+        );
 
         if (!employee) {
             return res.status(404).json({ message: "Employee not found" });
         }
 
-        res.status(200).json({
-            message: "Employee updated successfully",
+        return res.status(200).json({
+            message: "Employee updated successfully.",
             employee
         });
+
     } catch (err) {
-        res.status(500).json({ status: false, message: err.message });
+        return res.status(500).json({ status: false, message: err.message });
     }
 });
 
