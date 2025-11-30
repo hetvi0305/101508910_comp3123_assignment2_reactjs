@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:3002/api/v1
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3002:3002'
+    environment:
+      - SERVER_PORT=3002
+      - DB_CONNECTION_STRING=mongodb+srv://hetvipatel3:Mitali2307@cluster0.qedl0kb.mongodb.net/comp3123_assignment1?retryWrites=true&w=majority&appName=Cluster0
+      - JWT_SECRET=MY_SECRET_KEY
+    networks:
+      - app-network
+
+networks:
+  app-network:
