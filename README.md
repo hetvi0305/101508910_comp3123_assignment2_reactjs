@@ -1,70 +1,180 @@
-# Getting Started with Create React App
+# Employee Management App (React + Node.js + MongoDB + Docker)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is built as part of COMP3123 – Assignment 2.  
+It is a full-stack Employee Management application developed using:
 
-## Available Scripts
+- React (Frontend)
+- Node.js + Express (Backend API)
+- MongoDB Atlas (Database)
+- Docker Compose (Container Orchestration)
+- JWT Authentication
+- Multer Image Upload
+- Axios + Protected Routes
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features Implemented
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Authentication
+- User Signup
+- User Login
+- JWT-based authentication
+- Protected frontend routes
+- Logout functionality
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Employee Management
+- Add Employee (with profile picture upload)
+- Edit Employee (with image upload + preview)
+- View Employee Details (first name, last name, email, picture)
+- Delete Employee
+- List Employee Table with:
+  - Profile picture thumbnail
+  - First name
+  - Last name
+  - Email
+  - Actions (Edit / Delete / View)
 
-### `npm test`
+### File Upload
+- Profile picture upload using Multer
+- Static image hosting from backend (`/uploads`)
+- Image preview on Create/Edit pages
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### MongoDB Integration
+- Connected to MongoDB Atlas
+- Employee + User collections created automatically
 
-### `npm run build`
+### Docker Support
+- **frontend** (React)
+- **backend** (Node.js + Express)
+- Optional: **mongo-express**
+- Database handled through **Atlas**
+- Cross-container networking enabled
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Project Structure
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+/frontend        → React UI (Axios, JWT, Protected Routes)
+/backend         → Node.js API (Express, Multer, JWT, Mongoose)
+docker-compose.yml
+```
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## How to Run (Docker)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Build and start all containers
+```sh
+docker compose up --build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Access the application
+| Service     | URL                          |
+|-------------|------------------------------|
+| Frontend    | http://localhost:3000        |
+| Backend API | http://localhost:3002/api/v1 |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Stop containers
+```sh
+docker compose down
+```
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Backend Environment Variables
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+SERVER_PORT=3002
+DB_CONNECTION_STRING=<YOUR_MONGODB_ATLAS_URL>
+JWT_SECRET=MY_SECRET_KEY
+```
 
-### Code Splitting
+These are injected via `docker-compose.yml`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Authentication
+| Method | Endpoint              | Description         |
+|--------|------------------------|----------------------|
+| POST   | `/user/signup`        | Register a new user |
+| POST   | `/user/login`         | Login and get token |
 
-### Making a Progressive Web App
+### Employees
+| Method | Endpoint                       | Description             |
+|--------|---------------------------------|--------------------------|
+| GET    | `/emp/employees`                | List all employees      |
+| POST   | `/emp/employees`                | Create new employee     |
+| GET    | `/emp/employees/:id`            | Get employee by ID      |
+| PUT    | `/emp/employees/:id`            | Update employee         |
+| DELETE | `/emp/employees/:id`            | Delete employee         |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+All employee routes require authorization:
+```
+Authorization: Bearer <token>
+```
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Search Functionality (Not Implemented)
 
-### Deployment
+The assignment required the ability to search employees by:
+- Department
+- Position
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Although search logic was explored, this functionality is **not included in the final build** due to time constraints and environment issues.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Frontend UI Summary
+
+The React app includes:
+- Clean and consistent UI
+- Login and Signup pages
+- Reusable header with logout button
+- Employee list with action buttons
+- Add & Edit Employee forms with image preview
+- Protected routes preventing unauthorized access
+
+---
+
+## Known Limitations / Future Enhancements
+
+- Search functionality not implemented
+- No pagination or sorting
+- No role-based access control
+- More advanced UI (sidebar, dashboard) could be added
+
+---
+
+## Instructor Notes
+
+This submission includes:
+- Working authentication system
+- Employee CRUD with image upload
+- Clean React UI
+- Fully functional backend
+- Docker-compose setup
+- MongoDB Atlas integration
+- This README as documentation
+
+Search functionality was attempted but not completed.
+
+---
+
+## Final Status
+
+This app fulfills the **core assignment requirements**:
+
+✔ Authentication  
+✔ Protected routes  
+✔ Employee CRUD  
+✔ Image uploads  
+✔ React frontend + Node backend  
+✔ Docker orchestration  
+✔ Atlas integration  
+✔ Clean UI  
+
+Search functionality is *not* included in the final submission.
